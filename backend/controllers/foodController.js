@@ -39,7 +39,7 @@ const listFood = async (req, res) => {
 }
 
 //remove food items
-const removedFood = async (req, res) => {
+const removeFood = async (req, res) => {
     try{
         const food = await foodModel.findById(req.body.id);
         fs.unlink(`uploads/${food.image}`,()=>{})
@@ -53,4 +53,4 @@ const removedFood = async (req, res) => {
 }
 
 
-export {addFood, listFood, removedFood}
+export {addFood, listFood, removeFood}
