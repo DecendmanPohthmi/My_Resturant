@@ -24,10 +24,10 @@ const registerUser = async (req, res) => {
             return res.status(400).json({ success: false, message: "Please enter a valid email" });
         }
 
-        // Validate strong password
+        // Validate strong password (At least 8 characters, 1 number)
         if (!validator.isStrongPassword(password, { minLength: 8, minLowercase: 1, minUppercase: 0, minNumbers: 1, minSymbols: 0 })) {
             return res.status(400).json({ success: false, message: "Please enter a strong password (at least 8 characters and 1 number)" });
-        }        
+        }
 
         // Encrypt password
         const salt = await bcrypt.genSalt(10);
@@ -59,13 +59,13 @@ const loginUser = async (req, res) => {
         // Check if user exists
         const user = await userModel.findOne({ email });
         if (!user) {
-            return res.status(400).json({ success: false, message: "Invalid email or password" });
+            return res.status(400).json({ success: false, message: "Invalid email " });
         }
 
         // Compare passwords
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ success: false, message: "Invalid email or password" });
+            return res.status(400).json({ success: false, message: "Invalid password" });
         }
 
         // Generate token

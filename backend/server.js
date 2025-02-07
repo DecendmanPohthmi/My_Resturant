@@ -7,11 +7,18 @@ import 'dotenv/config'
 import adminRouter from './routes/adminRoutes.js';
 
 const app = express();
-const port = 3000
+const port = 5173
 
 //middleware
 app.use(express.json())
-app.use(cors())
+// server.js
+app.use(
+    cors({
+      origin: "http://localhost:5173", // Replace with your frontend URL
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    })
+  );;
 
 //db connection
 connectDB();
