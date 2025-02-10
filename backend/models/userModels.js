@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     identityID: { type: String, unique: true },  // Removed `required: true`
     password: { type: String, required: true },
-    infoData: { type: Object, default: {} }
+    cartData: { type: Object, default: {} }
 }, { minimize: false });
 
 // Pre-validate middleware to generate identityID
