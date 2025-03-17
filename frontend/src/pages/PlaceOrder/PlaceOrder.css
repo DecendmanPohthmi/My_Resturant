@@ -1,154 +1,70 @@
-/* PlaceOrder.css */
-
-/* Main form container */
-.place-order {
+.place-order{
     display: flex;
     align-items: start;
     justify-content: space-between;
-    gap: 30px;
-    padding: 40px 20px;
-    background-color: #f8f9fa; /* Light background color */
-    font-family: 'Arial', sans-serif;
-    margin-top: 100px;
-  }
-  
-  /* Left section for delivery information */
-  .place-order-left {
-    flex: 2;
-    background-color: #ffffff; /* White background */
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  }
-  
-  /* Title for delivery section */
-  .place-order-left .titel {
-    font-size: 20px;
-    font-weight: bold;
-    color: #333333;
-    margin-bottom: 20px;
-    text-align: center;
-    border-bottom: 2px solid #c3d4ca; /* Green underline */
-    padding-bottom: 10px;
-  }
-  
-  /* Input fields */
-  .place-order-left input[type="text"] {
+    gap: 50px;
+    margin: 100px 0px;
+}
+.place-order-left{
+    width: 100%;
+    max-width: max(30%,500px);
+}
+.place-order-left .title{
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 50px;
+}
+.place-order-left input{
+    margin-bottom: 15px;
     width: 100%;
     padding: 10px;
-    margin-bottom: 15px;
-    font-size: 14px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .place-order-left input[type="text"]::placeholder {
-    color: #aaaaaa; /* Placeholder text color */
-    font-style: italic;
-  }
-  
-  .place-order-left input[type="text"]:focus {
-    outline: none;
-    border-color: #7e8280; /* Green border on focus */
-    box-shadow: 0 0 5px rgba(159, 162, 160, 0.5);
-  }
-  
-  /* Multiple input fields side-by-side */
-  .multiple-field {
+    border: 1px solid #C5C5C5;
+    border-radius: 4px;
+    outline-color: tomato;
+}
+.place-order-left .multi-field{
     display: flex;
     gap: 10px;
-  }
-  
-  .multiple-field input {
-    flex: 1;
-  }
-  
-  /* Right section for cart total */
-  .place-order-right {
-    flex: 1;
-    background-color: #ffffff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+.place-order-right{
+    width: 100%;
+    max-width: max(40%,500px);
+}
+.place-order-submit{
+    margin-top: 50px;
+    border: none;
+    background-color: tomato;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.payment{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  /* Cart total section */
-  .cart-total h2 {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #333333;
-  }
-  
-  .cart-total-details {
+    align-items: start;
+    gap: 15px;
+}
+.payment h2{
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+.payment .payment-option{
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 14px;
-  }
-  
-  .cart-total-details b {
-    font-size: 16px;
-  }
-  
-  hr {
-    border: none;
-    border-top: 1px solid #ddd;
-    margin: 10px 0;
-  }
-  
-  /* Checkout button */
-  button {
-    width: 100%;
-    padding: 12px;
-    background-color: #2ecc71; /* Green background */
-    color: #ffffff; /* White text */
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
+    align-items: center;
+    gap: 10px ;
+    border: 1px solid tomato;
+    padding: 15px;
+    border-radius: 4px;
+    min-width: 300px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #27ae60; /* Darker green on hover */
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .place-order {
-      flex-direction: column;
-      gap: 20px;
+}
+.payment .payment-option:hover{
+    background-color:  #ffe7de;
+}
+
+@media (max-width:700px) {
+    .place-order{
+        flex-direction: column;
     }
-  
-    .place-order-left,
-    .place-order-right {
-      flex: 1;
-    }
-  
-    .multiple-field {
-      flex-direction: column;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .place-order {
-      padding: 20px;
-    }
-  
-    .place-order-left input[type="text"] {
-      font-size: 12px;
-      padding: 8px;
-    }
-  
-    button {
-      font-size: 14px;
-      padding: 10px;
-    }
-  }
-  
+}

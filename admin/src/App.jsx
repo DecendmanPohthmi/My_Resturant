@@ -1,28 +1,25 @@
 import React from 'react'
-import './index.css'
 import Navbar from './components/Navbar/Navbar'
-import Slidebar from './components/Slidebar/Slidebar'
+import Sidebar from './components/Sidebar/Sidebar'
 import { Route, Routes } from 'react-router-dom'
 import Add from './pages/Add/Add'
 import List from './pages/List/List'
-import Order from './pages/Order/Order'
+import Orders from './pages/Orders/Orders'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
-
-  const url = "http://localhost:4000";
   return (
-    <div>
+    <div className='app'>
       <ToastContainer />
       <Navbar />
       <hr />
       <div className="app-content">
-        <Slidebar />
+        <Sidebar />
         <Routes>
-          <Route path='/add' element={<Add url={url}/>} />
-          <Route path='/list' element={<List url={url}/>} />
-          <Route path='/orders' element={<Order url={url}/>} />
+          <Route path="/add" element={<Add />} />
+          <Route path="/list" element={<List />} />
+          <Route path="/orders" element={<Orders />} />
         </Routes>
       </div>
     </div>
