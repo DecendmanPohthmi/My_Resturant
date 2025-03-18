@@ -29,10 +29,19 @@ const Order = () => {
     }
   }
 
-
   useEffect(() => {
+    // Fetch orders immediately when component mounts
     fetchAllOrders();
-  }, [])
+  
+    // Set interval to fetch orders every 30 seconds
+    const intervalId = setInterval(() => {
+      fetchAllOrders();
+    }, 30000);  // 30 seconds = 30000 milliseconds
+  
+    // Cleanup interval when component unmounts
+    return () => clearInterval(intervalId);
+  }, []);
+  
 
   return (
     <div className='order add'>

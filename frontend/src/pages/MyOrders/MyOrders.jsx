@@ -14,11 +14,18 @@ const MyOrders = () => {
     setData(response.data.data)
   }
 
-  useEffect(()=>{
-    if (token) {
+  useEffect(() => {
+    // Fetch orders immediately when component mounts
+    fetchOrders();
+  
+    // Set interval to fetch orders every 30 seconds
+    const intervalId = setInterval(() => {
       fetchOrders();
-    }
-  },[token])
+    }, 30000);  // 30 seconds = 30000 milliseconds
+  
+    // Cleanup interval when component unmounts
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <div className='my-orders'>

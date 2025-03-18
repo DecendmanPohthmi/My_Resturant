@@ -32,20 +32,23 @@ const PlaceOrder = () => {
     }
 
     const placeOrder = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
+    
         let orderItems = [];
-        food_list.map(((item) => {
+        food_list.forEach((item) => {
             if (cartItems[item._id] > 0) {
-                let itemInfo = item;
-                itemInfo["quantity"] = cartItems[item._id];
-                orderItems.push(itemInfo)
+                let itemInfo = { ...item, quantity: cartItems[item._id] };
+                orderItems.push(itemInfo);
             }
-        }))
+        });
+    
         let orderData = {
             address: data,
             items: orderItems,
             amount: getTotalCartAmount() + deliveryCharge,
-        }
+            phone: data.phone,  // Ensure consistent naming
+        };
+    
         if (payment === "razorpay") {
             try {
                 let response = await axios.post(url + "/api/order/place", orderData, { headers: { token } });
@@ -54,7 +57,7 @@ const PlaceOrder = () => {
                   const { order_id, amount, currency } = response.data;
           
                   const options = {
-                    key: import.meta.env.REACT_APP_RAZORPAY_KEY_ID,
+                    key: import.meta.env.VITE_RAZORPAY_KEY, // Correct way to use env variable
                     amount: amount,
                     currency: currency,
                     name: "TastyBites",
@@ -66,10 +69,9 @@ const PlaceOrder = () => {
                         paymentId: response.razorpay_payment_id,
                       };
                   
-                      await axios.post(url + "/api/order/save", paymentData, { headers: { token } });
-                  
-                      alert("Payment Successful!");
-                      window.location.replace("/orders");
+                      await axios.post(url + "/api/order/saveorder", paymentData, { headers: { token } });
+                      navigate("/myorders");
+                      setCartItems({});
                     },
                     theme: { color: "#3399cc" },
                   };
@@ -84,20 +86,25 @@ const PlaceOrder = () => {
                 console.error("Error in payment:", error);
                 alert("Payment failed. Please try again.");
               }
-        }
-        else{
-            let response = await axios.post(url + "/api/order/placecod", orderData, { headers: { token } });
-            if (response.data.success) {
-                navigate("/myorders")
-                toast.success(response.data.message)
-                setCartItems({});
+          
+        } else {
+            try {
+                let response = await axios.post(`${url}/api/order/placecod`, orderData, { headers: { token } });
+    
+                if (response.data.success) {
+                    toast.success(response.data.message);
+                    navigate("/myorders");
+                    setCartItems({});
+                } else {
+                    toast.error("Something went wrong");
+                }
+            } catch (error) {
+                console.error("COD order error:", error);
+                toast.error("Failed to place COD order.");
             }
-            else {
-                toast.error("Something Went Wrong")
-            }
         }
-
-    }
+    };
+    
 
     useEffect(() => {
         if (!token) {

@@ -1,6 +1,8 @@
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import Razorpay from "razorpay";
+import crypto from "crypto";
+
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -36,6 +38,27 @@ const placeOrder = async (req, res) => {
   }
 };
 
+const saveOrder = async (req, res) => {
+  try {
+    const newOrder = new orderModel({
+      userId: req.body.userId,
+      items: req.body.items,
+      amount: req.body.amount,
+      address: req.body.address,
+      phoneNo: req.body.phone,
+      paymentId: req.body.paymentId,
+    });
+
+    await newOrder.save();
+    await userModel.findByIdAndUpdate(req.body.userId, { cartData: {} });
+
+    res.json({ success: true, message: "Order saved successfully!" });
+  } catch (error) {
+    console.error("Error saving order:", error);
+    res.status(500).json({ success: false, message: "Order saving failed", error });
+  }
+};
+
 const placeOrderCod = async (req, res) => {
 
     try {
@@ -57,26 +80,6 @@ const placeOrderCod = async (req, res) => {
     }
 }
 
-const saveOrder = async (req, res) => {
-    try {
-      const newOrder = new orderModel({
-        userId: req.body.userId,
-        items: req.body.items,
-        amount: req.body.amount,
-        address: req.body.address,
-        phoneNo: req.body.phone,
-        paymentId: req.body.paymentId,
-      });
-  
-      await newOrder.save();
-      await userModel.findByIdAndUpdate(req.body.userId, { cartData: {} });
-  
-      res.json({ success: true, message: "Order saved successfully!" });
-    } catch (error) {
-      console.error("Error saving order:", error);
-      res.status(500).json({ success: false, message: "Order saving failed", error });
-    }
-  };
 
 const updateStatus = async (req, res) => {
     console.log(req.body);
@@ -109,4 +112,19 @@ const userOrders = async (req, res) => {
   }
 }
 
-export { placeOrder, saveOrder, placeOrderCod, updateStatus, listOrders, userOrders };   
+const verifyPayment = async (req, res) => {
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+  const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET_KEY);
+  hmac.update(`${razorpay_order_id}|${razorpay_payment_id}`);
+  const digest = hmac.digest("hex");
+
+  if (digest === razorpay_signature) {
+    res.json({ success: true, message: "Payment verified successfully" });
+  } else {
+    res.status(400).json({ success: false, message: "Payment verification failed" });
+  }
+};
+
+
+export { placeOrder, saveOrder, placeOrderCod, updateStatus, listOrders, userOrders, verifyPayment };   
