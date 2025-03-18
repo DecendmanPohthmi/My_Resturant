@@ -46,15 +46,44 @@ const PlaceOrder = () => {
             items: orderItems,
             amount: getTotalCartAmount() + deliveryCharge,
         }
-        if (payment === "stripe") {
-            let response = await axios.post(url + "/api/order/place", orderData, { headers: { token } });
-            if (response.data.success) {
-                const { session_url } = response.data;
-                window.location.replace(session_url);
-            }
-            else {
-                toast.error("Something Went Wrong")
-            }
+        if (payment === "razorpay") {
+            try {
+                let response = await axios.post(url + "/api/order/place", orderData, { headers: { token } });
+          
+                if (response.data.success) {
+                  const { order_id, amount, currency } = response.data;
+          
+                  const options = {
+                    key: import.meta.env.REACT_APP_RAZORPAY_KEY_ID,
+                    amount: amount,
+                    currency: currency,
+                    name: "TastyBites",
+                    description: "Food Order Payment",
+                    order_id: order_id,
+                    handler: async function (response) {
+                      const paymentData = {
+                        ...orderData,
+                        paymentId: response.razorpay_payment_id,
+                      };
+                  
+                      await axios.post(url + "/api/order/save", paymentData, { headers: { token } });
+                  
+                      alert("Payment Successful!");
+                      window.location.replace("/orders");
+                    },
+                    theme: { color: "#3399cc" },
+                  };
+                  
+          
+                  const razor = new window.Razorpay(options);
+                  razor.open();
+                } else {
+                  alert("Error while creating Razorpay order.");
+                }
+              } catch (error) {
+                console.error("Error in payment:", error);
+                alert("Payment failed. Please try again.");
+              }
         }
         else{
             let response = await axios.post(url + "/api/order/placecod", orderData, { headers: { token } });
@@ -117,9 +146,9 @@ const PlaceOrder = () => {
                         <img src={payment === "cod" ? assets.checked : assets.un_checked} alt="" />
                         <p>COD ( Cash on delivery )</p>
                     </div>
-                    <div onClick={() => setPayment("stripe")} className="payment-option">
-                        <img src={payment === "stripe" ? assets.checked : assets.un_checked} alt="" />
-                        <p>Stripe ( Credit / Debit )</p>
+                    <div onClick={() => setPayment("razorpay")} className="payment-option">
+                        <img src={payment === "razorpay" ? assets.checked : assets.un_checked} alt="" />
+                        <p>razorpay ( Credit / Debit )</p>
                     </div>
                 </div>
                 <button className='place-order-submit' type='submit'>{payment==="cod"?"Place Order":"Proceed To Payment"}</button>
